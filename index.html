@@ -1,33 +1,129 @@
 <!DOCTYPE html>  
 <html lang="en">  
 <head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>图片展示</title>  
-    <style>  
-        html, body {  
-            margin: 0;  
-            padding: 0;  
-            height: 100%;  
-        }  
-        .fullscreen-container {  
-            display: flex;  
-            justify-content: center;  
-            align-items: center;  
-            height: 100%;  
-            width: 100%;  
-            background-color: #000;  
-        }  
-        .fullscreen-container img {  
-            max-width: 100%;  
-            max-height: 100%;  
-            object-fit: cover;  
-        }  
-    </style>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>图片切换与全屏展示</title>  
+<style>  
+    /* 样式重置和全屏容器样式 */  
+    html, body {  
+        margin: 0;  
+        padding: 0;  
+        overflow: hidden; /* 隐藏滚动条 */  
+        height: 100%;  
+    }  
+    .fullscreen-container {  
+        display: flex;  
+        justify-content: center;  
+        align-items: center;  
+        height: 100%;  
+        width: 100%;  
+        background-color: #000; /* 可选：为全屏前页面提供背景色 */  
+    }  
+    img {  
+        max-width: 100%;  
+        max-height: 100%;  
+        width: auto;  
+        height: auto;  
+        object-fit: cover;  
+        display: block;  
+    }  
+    /* 切换按钮样式 */  
+    #switch-button {  
+        position: fixed;  
+        bottom: 60px;  
+        right: 20px;  
+        padding: 10px 20px;  
+        background-color: #007BFF;  
+        color: white;  
+        border: none;  
+        border-radius: 5px;  
+        cursor: pointer;  
+        z-index: 1000;  
+    }  
+    #switch-button:hover {  
+        background-color: #0056b3;  
+    }  
+    /* 全屏按钮样式 */  
+    #fullscreen-button {  
+        position: fixed;  
+        bottom: 20px;  
+        right: 20px;  
+        padding: 10px 34px;  
+        background-color: #007BFF;  
+        color: white;  
+        border: none;  
+        border-radius: 5px;  
+        cursor: pointer;  
+        z-index: 1000;  
+        display: block;  
+    }  
+    #fullscreen-button:hover {  
+        background-color: #0056b3;  
+    }  
+</style>  
 </head>  
 <body>  
-    <div class="fullscreen-container">  
-        <img src="https://s2.loli.net/2024/07/15/yLph6lJ39DON2Pj.jpg" alt="Your Image">  
-    </div>  
+<div class="fullscreen-container" id="fullscreen-container">  
+    <img src="https://s2.loli.net/2024/07/15/1PuSgK4qGr8JoWn.jpg" alt="Image 1" id="image1" style="display: block;">  
+    <img src="https://s2.loli.net/2024/07/15/yLph6lJ39DON2Pj.jpg" alt="Image 2" id="image2" style="display: none;">  
+</div>  
+<button id="switch-button" onclick="switchImage()">切换图片</button>  
+<button id="fullscreen-button" onclick="toggleFullscreen()">全屏</button>  
+
+  
+<script>  
+    let currentImage = 1;  
+  
+   // 切换图片  
+    function switchImage() {  
+        const image1 = document.getElementById('image1');  
+        const image2 = document.getElementById('image2');  
+        if (currentImage === 1) {  
+            image1.style.display = 'none';  
+            image2.style.display = 'block';  
+            currentImage = 2;  
+            // 如果当前是全屏状态，需要重新请求全屏以更新全屏元素  
+            if (isFullscreen) {  
+                toggleFullscreen();  
+            }  
+        } else {  
+            image2.style.display = 'none';  
+            image1.style.display = 'block';  
+            currentImage = 1;  
+            // 如果当前是全屏状态，需要重新请求全屏以更新全屏元素  
+            if (isFullscreen) {  
+                toggleFullscreen();  
+            }  
+        }  
+    }  
+  
+    // 监听全屏事件  
+    document.addEventListener('fullscreenchange', function() {  
+        var button = document.getElementById('fullscreen-button');  
+        isFullscreen = document.fullscreenElement ? true : false;  
+        if (isFullscreen) {  
+            // 如果进入全屏，隐藏按钮  
+            button.textContent = '退出全屏';  
+        } else {  
+            // 如果退出全屏，显示按钮并恢复文本  
+            button.textContent = '全屏';  
+            button.style.display = 'block';  
+        }  
+    });  
+  
+    // 尝试进入或退出全屏模式的函数  
+    function toggleFullscreen() {  
+        var elem = document.fullscreenElement ? document : document.getElementById('fullscreen-container');  
+  
+        if (!document.fullscreenElement) {  
+            elem.requestFullscreen();  
+        } else {  
+            if (document.exitFullscreen) {  
+                document.exitFullscreen();  
+            }  
+        }  
+    }  
+	</script>  
 </body>  
 </html>
